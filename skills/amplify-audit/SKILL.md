@@ -1,107 +1,83 @@
 ---
-
-## name: amplify-audit description: Audit the user's own prompts from coding agent transcripts (Claude Code or Codex) and classify each as Amplify (Steer / Ground / Deepen / Expand), Cognitive Offload (judged against the 상황 이해 / 여력 확보 / 위임 적격 gates), or Bypass (Ceded Decisions / Skipped Verification / Illusion of Competence / Capability Not Formed), then write an HTML report with the ratio, a debt list with concrete repayment actions, and rewritten versions of the worst prompts. Use when the user says "오늘 프롬프트 분석해줘", "내가 AI 제대로 쓴 건지 봐줘", "amplify bypass 비율", "프롬프트 회고", or asks to review or grade how they have been prompting. Also offer it when they say they feel like they were just copy-pasting AI output without understanding it. Not for reviewing code, PRs, or anyone else's prompts.
-
+name: amplify-audit
+description: Audit the user's own prompts — classify as Amplify, Offload, or Bypass and generate an HTML report. Trigger on "프롬프트 분석", "amplify bypass 비율", "프롬프트 회고", or requests to review prompting quality.
 ---
 # Amplify Audit
 
-Two bash calls. Collect prints the prompts to stdout *and* saves them; render reads those saved prompts and takes only your judgements on stdin, joined by `id`. Classification happens in between, by you. Never re-type the prompt text — the transcript's copy is authoritative and yours would only introduce drift.
+Two bash calls. Classification happens in between, by you. Never re-type prompt text — the transcript copy is authoritative.
+
+```bash
+AUDIT="$(find ~/.claude/skills ~/.agents/skills -name audit.py -path '*/amplify-audit/*' 2>/dev/null | head -1)"
+```
 
 ## 1. Collect
 
 ```bash
-python3 "$(find ~/.claude/skills ~/.agents/skills -name audit.py -path '*/amplify-audit/*' 2>/dev/null | head -1)" collect
-
+python3 "$AUDIT" collect
 ```
 
-Prints the prompts and writes them to `~/amplify-audit/prompts.json` for step 4.
+Writes `~/amplify-audit/prompts.json`. Reads `~/.claude/projects/**/*.jsonl` + `~/.codex/sessions/**/*.jsonl`. Options: `--since 7d`, `--date 2026-08-13`, `--session current`, `--project Heatmap`.
 
-Defaults to today across all projects. Other scopes: `--since 7d`, `--date 2026-08-13`, `--session current`, `--project Heatmap`. Reads `~/.claude/projects/**/*.jsonl` (Claude Code) and `~/.codex/sessions/**/*.jsonl` (Codex) simultaneously. Drops tool results, meta entries, subagent turns, and built-in slash commands.
-
-Under ~8 prompts there isn't enough for a ratio — say so and skip the percentage, but still tag each prompt.
+Under ~8 prompts skip percentages, still tag each.
 
 ## 2. Classify
 
-One verdict per prompt, decided in this order.
+One verdict per prompt.
 
-### Is it a delegation of cognitive work?
+### Offload check (first)
 
-기억 · 검색 · 정리 · 반복 — work handed to the tool to free up capacity. If yes, it's **Cognitive Offloading** and gets judged at three gates. If no, skip to Amplify/Bypass.
+If the prompt delegates cognitive work (memory, search, formatting, repetition), judge 3 gates:
 
+| gate | question | fail → |
+|------|----------|--------|
+| `understood` | 결과를 이해 가능한 형태로 받았는가 | `bypass`/`illusion_of_competence` |
+| `relieved` | 인지 부담이 실제로 줄었는가 | mark inefficient |
+| `eligible` | 이 작업이 내 역량이 될 것은 아닌가 | `bypass`/`capability_not_formed` |
 
-| gate               | 질문                     | 실패하면                                          |
-| ------------------ | ---------------------- | --------------------------------------------- |
-| `understood` 상황 이해 | 결과를 이해 가능한 형태로 받았는가    | → `bypass` / `illusion_of_competence`         |
-| `relieved` 여력 확보   | 인지 부담이 정말 감소했는가        | offload로 두되 비효율로 기록 (검증이 더 오래 걸렸다면 위임한 게 아니다) |
-| `eligible` 위임 적격   | 이 반복이 내 역량이 될 것은 아니었는가 | → `bypass` / `capability_not_formed`          |
+All pass → `verdict:"offload"`, `tag:"offload"`. This is a good outcome. Record gates on every offload-shaped prompt including failures: `"gates":{"understood":false,"relieved":true,"eligible":false}`. Use `null` for unjudgeable gates. Never gate an `ambiguous` prompt.
 
+### Amplify
 
-All three pass → `verdict: "offload"`, `tag: "offload"`. **This is a good outcome, not a lesser Amplify.** CI yaml, 반복 설정, 회의록 정리를 넘기는 건 정확한 판단입니다. Say so.
+| tag | tell |
+|-----|------|
+| `steer` | Names a constraint. Contains a decision only he could make. |
+| `ground` | Deliverable is understanding. Often carries his own hypothesis. |
+| `deepen` | He produces first, AI reacts. |
+| `expand` | Stretch with awareness — "지금 실력으로 될지 모르겠는데". |
 
-Never put gates on an `ambiguous` prompt — if the intent didn't resolve, 위임 적격 didn't resolve either. Record the gates on every offload-shaped prompt including the ones that fail into bypass — `"gates": {"understood": false, "relieved": true, "eligible": false}` — so each prompt row can show which gate leaked. Use `null` for a gate you can't judge.
+### Bypass
 
-### Otherwise: Amplify or Bypass
+| tag | tell |
+|-----|------|
+| `ceded_decisions` | "알아서", "제일 좋은" with no criteria. |
+| `skipped_verification` | No gap between receiving output and moving on. |
+| `illusion_of_competence` | Concept re-asked with no attempt to produce it himself. |
+| `capability_not_formed` | Whole unit delegated; nothing transferable left. |
 
-**Amplify**
+### Neutral
 
+`verdict:"neutral"`, `tag:"none"` for mechanical requests and continuations. Don't force these into a bucket.
 
-| tag      | 뜻          | tell                                                                             |
-| -------- | ---------- | -------------------------------------------------------------------------------- |
-| `steer`  | 통제하며 이끌기   | He names the constraint. Contains a decision only he could make.                 |
-| `ground` | 모르는 걸 파악하기 | Deliverable is understanding, not an artifact. Often carries his own hypothesis. |
-| `deepen` | 오래 남게 연습   | He produces first, AI reacts. Output direction reversed.                         |
-| `expand` | 가능성 넓히기    | Stretch with awareness — "지금 실력으로 될지 모르겠는데".                                     |
+### Ambiguous
 
+`verdict:"ambiguous"` when judgement doesn't form. Requires `ambiguity`:
+- `context` — evidence is outside this prompt (default when torn)
+- `prompt` — prompt itself is unclear (a finding; assert only with confidence)
 
-**Bypass**
-
-
-| tag                      | 뜻           | tell                                                                   |
-| ------------------------ | ----------- | ---------------------------------------------------------------------- |
-| `ceded_decisions`        | 판단권을 넘김     | "알아서", "제일 좋은" with no criteria attached.                              |
-| `skipped_verification`   | 검증을 생략      | No gap between receiving output and moving on. Read the *next* prompt. |
-| `illusion_of_competence` | 이해했다는 착각    | Concept re-asked with no attempt to produce it himself.                |
-| `capability_not_formed`  | 역량이 형성되지 않음 | Whole unit of work delegated; nothing transferable left.               |
-
-
-`neutral` / tag `none` for mechanical requests, continuations, tool operation. Don't force these into a bucket — a report where every prompt is morally significant is one he'll stop trusting.
-
-### Ambiguous — 판정이 성립하지 않은 경우
-
-`verdict: "ambiguous"` when the text genuinely won't resolve. This is a *fifth verdict*, not a weak Amplify and not a confidence score on one — it says the judgement never formed, so the prompt leaves every count: the ratio, the tag donuts, the gates. An `ambiguous` is more useful than a confident wrong tag.
-
-Optionally keep `tag` as the lean ("bypass 쪽으로 기울지만 확정 못 함"); the report renders it muted. Drop `tag` entirely when there isn't even a lean.
-
-Every `ambiguous` needs an `ambiguity`, because the two kinds mean opposite things:
-
-
-| `ambiguity` | 뜻                                                | 이건 누구 문제인가                             |
-| ----------- | ------------------------------------------------ | -------------------------------------- |
-| `context`   | 판정 근거가 이 프롬프트 *밖에* 있다 — 앞 턴, 잘린 뒷부분, 그가 이미 읽은 로그 | 도구의 한계. collect가 사용자 발화만 뽑아오니 안 보이는 것. |
-| `prompt`    | 맥락을 다 봐도 뭘 하려는 건지 안 잡힌다                          | 발견 대상. 덜 여문 질문을 보냈다는 신호이므로 세어서 보여준다.   |
-
-
-Default to `context` when torn. `prompt` is a finding about him and shouldn't be asserted on a hunch — a miscounted `context` costs nothing, a miscounted `prompt` manufactures a problem he doesn't have.
-
-If `context` dominates the day, say so in `meta.headline`: that's the tool failing to show enough, not him prompting badly, and the fix is a wider `--since` or a session scope, not a lecture.
-
-Judge the prompt, not the outcome, and quote the deciding evidence in `reason`: "'알아서'만 있고 제약 조건이 하나도 없음" beats "판단 근거가 부족함". Infer his growth zone from the day's topics and use it to judge the 위임 적격 gate; it isn't a field, it's just how you decide.
+Quote deciding evidence in `reason`.
 
 ## 3. Render
 
 ```bash
-python3 "$(find ~/.claude/skills ~/.agents/skills -name audit.py -path '*/amplify-audit/*' 2>/dev/null | head -1)" render --out ~/amplify-audit/2026-08-13.html <<'JSON'
-{ ... }
+python3 "$AUDIT" render --out ~/amplify-audit/2026-08-13.html <<'JSON'
+{"meta":{"label":"2026-08-13 · 하루"},"classifications":[{"id":"p001","verdict":"amplify","tag":"steer","reason":"..."},…]}
 JSON
-
 ```
 
-Reads the text from `--prompts` (default `~/amplify-audit/prompts.json`). Warnings on stderr name any id you left unjudged, invented, or repeated — an unjudged prompt is rendered Neutral, so fix it and re-run rather than shipping a silent downgrade.
+Schema: `meta.label` + `classifications[]` with `id`, `verdict`, `tag`, `gates`, `ambiguity`, `reason`. No `text` — render reads it from prompts.json.
 
-Schema — `meta` with `label` only (e.g. `"2026-08-13 · 하루"`), and `classifications[]` with `id` plus `verdict` (`amplify`|`offload`|`bypass`|`neutral`|`ambiguous`) `tag` `gates` `ambiguity` (`context`|`prompt`, required whenever `verdict` is `ambiguous`) `reason` — **id and judgement only, no** `text`.
-
-Nothing else is rendered. Don't send `headline`, `reinvestment`, `rewrites`, `debts`, or `tomorrow` — the report is the ratio, the timeline, and the tagged prompts, and it's his to read. Then in chat: the ratio in one line and the path, nothing more.
+Output in chat: ratio in one line + file path. Nothing more.
 
 ## Tone
 
-He asked to be measured, so measure. Don't soften a bypass into "이것도 나름 전략적이었네요", and don't inflate the amplify count to be encouraging — a flattering audit is a useless one. Equally, don't moralize: this is a ledger, not a confession. Legitimate offloading should be stated as legitimate without hedging. The report shows the shape of the day and stops there — resist adding advice, plans, or homework that he didn't ask for.
+Measure, don't soften or moralize. A flattering audit is useless; a moralizing one gets ignored.

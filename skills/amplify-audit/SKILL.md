@@ -70,7 +70,7 @@ Quote deciding evidence in `reason`.
 
 ```bash
 python3 "$AUDIT" render --out ~/amplify-audit/2026-08-13.html <<'JSON'
-{"meta":{"label":"2026-08-13 · 하루"},"classifications":[{"id":"p001","verdict":"amplify","tag":"steer","reason":"..."},…]}
+{"meta":{"label":"2026-08-13 · Today"},"classifications":[{"id":"p001","verdict":"amplify","tag":"steer","reason":"..."},…]}
 JSON
 ```
 

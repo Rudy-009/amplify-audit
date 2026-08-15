@@ -1,0 +1,156 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>프롬프트 리포트 — 2026-08-15 · 하루 (샘플)</title><style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+ --blue:#007AFF;--green:#34C759;--indigo:#5856D6;--orange:#FF9500;--pink:#FF2D55;
+ --purple:#AF52DE;--red:#FF3B30;--teal:#30B0C7;--cyan:#32ADE6;
+ --ok-bg:rgba(52,199,89,.15);--no-bg:rgba(255,59,48,.15);
+ --gray:#8E8E93;--gray3:#C7C7CC;--gray5:#E5E5EA;
+ --bg:#F2F2F7;--card:#FFFFFF;--label:#000000;--label2:rgba(60,60,67,.6);
+ --label3:rgba(60,60,67,.3);--sep:rgba(60,60,67,.29);--fill:rgba(120,120,128,.12);
+ --radius:12px;
+ --sf:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",
+   "Apple SD Gothic Neo","Pretendard Variable",Pretendard,sans-serif}
+@media (prefers-color-scheme:dark){:root{
+ --blue:#0A84FF;--green:#30D158;--indigo:#5E5CE6;--orange:#FF9F0A;--pink:#FF375F;
+ --purple:#BF5AF2;--red:#FF453A;--teal:#40C8E0;--cyan:#64D2FF;
+ --ok-bg:rgba(48,209,88,.22);--no-bg:rgba(255,69,58,.22);
+ --gray:#8E8E93;--gray3:#48484A;--gray5:#2C2C2E;
+ --bg:#000000;--card:#1C1C1E;--label:#FFFFFF;--label2:rgba(235,235,245,.6);
+ --label3:rgba(235,235,245,.3);--sep:rgba(84,84,88,.65);--fill:rgba(120,120,128,.24)}}
+body{margin:0;background:var(--bg);color:var(--label);font-family:var(--sf);
+ font-size:17px;line-height:1.47;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:44px 20px 80px}
+h1{font-size:34px;font-weight:700;letter-spacing:.37px;margin:0}
+h2{font-size:13px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--label2);margin:34px 0 8px;padding:0 16px}
+h3{font-size:17px;font-weight:600;margin:0;letter-spacing:-.4px}
+.sub{color:var(--label2);font-size:15px;margin:4px 0 0}
+.head{padding:0 4px 6px}
+.card{background:var(--card);border-radius:var(--radius);overflow:hidden}
+.row{padding:12px 16px;border-top:.5px solid var(--sep)}
+.row:first-child{border-top:0}
+
+.donut-main{display:flex;align-items:center;gap:24px;padding:20px 16px;flex-wrap:wrap}
+.dw{position:relative;flex:0 0 auto;line-height:0}
+.dw .mid{position:absolute;inset:0;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;text-align:center;line-height:1.2}
+.dw .mid b{font-size:30px;font-weight:700;letter-spacing:-.5px;line-height:1}
+.dw .mid span{font-size:11px;color:var(--label2);margin-top:2px}
+.dw .mid .den{font-size:10px;color:var(--label3);margin-top:1px;font-variant-numeric:tabular-nums}
+.legend{flex:1 1 200px;min-width:190px}
+.lg{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:15px}
+.lg .dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+.lg .nm{flex:1}
+.lg .vl{font-variant-numeric:tabular-nums;color:var(--label2)}
+.lg.sep{border-top:.5px solid var(--sep);margin-top:6px}
+.lg.off{color:var(--label3)}
+.lg .dot.hollow{border:1.5px dashed var(--gray3);background:none}
+.lg.off .vl{color:var(--label3);font-size:13px}
+.lg.off .nm em{display:block;font-style:normal;font-size:11px;color:var(--label3);margin-top:-1px}
+.lg.off:first-of-type{margin-top:6px;border-top:.5px solid var(--sep);padding-top:9px}
+.pair{display:grid;grid-template-columns:1fr 1fr;border-top:.5px solid var(--sep)}
+.pair>div{padding:18px 16px}
+.pair>div+div{border-left:.5px solid var(--sep)}
+.pair h4{margin:0 0 12px;font-size:13px;font-weight:600;color:var(--label2);
+.pair h4 i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.mini{display:flex;align-items:center;gap:14px}
+.mini .keys{flex:1;min-width:0}
+.mini .k{display:flex;align-items:center;gap:7px;font-size:12.5px;padding:2.5px 0;
+ color:var(--label2)}
+.mini .k i{width:8px;height:8px;border-radius:2px;flex:0 0 auto}
+.mini .k b{color:var(--label);font-weight:600;font-variant-numeric:tabular-nums;
+ margin-left:auto;padding-left:8px}
+
+
+.strip{padding:18px 16px 12px}
+.bars{display:flex;align-items:flex-end;gap:2px;height:92px}
+.bars button{flex:1 1 4px;min-width:3px;border:0;padding:0;border-radius:2.5px;
+ cursor:pointer;opacity:.92;transition:opacity .15s,transform .15s;transform-origin:bottom}
+.bars button:hover,.bars button:focus-visible{opacity:1;transform:scaleX(1.6)}
+.axis{display:flex;justify-content:space-between;font-size:11px;color:var(--label3);
+ margin-top:8px;border-top:.5px solid var(--sep);padding-top:7px}
+
+ background:var(--fill);border-radius:999px;padding:2px 9px;white-space:nowrap}
+
+
+
+.seg{display:flex;background:var(--fill);border-radius:9px;padding:2px;margin:0 0 10px;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:1;font:inherit;font-size:13px;font-weight:500;border:0;background:none;
+ color:var(--label);padding:6px 4px;border-radius:7px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.p{padding:13px 16px;border-top:.5px solid var(--sep);border-left:3px solid transparent}
+.p:first-child{border-top:0}
+.p.amplify{border-left-color:var(--blue)}
+.p.offload{border-left-color:var(--green)}
+.p.bypass{border-left-color:var(--red)}
+.p.ambiguous{border-left-color:var(--gray3);border-left-style:dashed}
+.p .top{display:flex;flex-wrap:wrap;gap:4px 9px;align-items:center;font-size:12px;
+ color:var(--label3)}
+.p .tag{font-weight:600}
+.p .pill{background:var(--fill);color:var(--label2);border-radius:999px;padding:1px 8px;
+ font-size:11px}
+.p .gate{border-radius:999px;padding:1px 8px;font-size:11px;font-weight:600}
+.p .gate.ok{background:var(--ok-bg);color:var(--green)}
+.p .gate.no{background:var(--no-bg);color:var(--red)}
+.p .text{margin:6px 0 0;font-size:16px;white-space:pre-wrap;word-break:break-word}
+.p .reason{margin:7px 0 0;font-size:13.5px;color:var(--label2);line-height:1.45}
+.p:target{background:var(--fill)}
+.p.ambiguous .text{color:var(--label2)}
+.p.ambiguous .tag{opacity:.45}
+.empty{padding:20px 16px;color:var(--label3);font-size:15px}
+footer{margin-top:34px;padding:0 16px;font-size:12px;color:var(--label3)}
+@media (max-width:520px){.wrap{padding:28px 12px 60px}h1{font-size:28px}
+ .pair{grid-template-columns:1fr}
+ .pair>div+div{border-left:0;border-top:.5px solid var(--sep)}
+ .donut-main{gap:16px}}
+@media print{body{background:#fff}.seg{display:none}.p{break-inside:avoid}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body><div class="wrap">
+
+<div class="head"><h1>프롬프트 리포트</h1><p class="sub">2026-08-15 · 하루 (샘플)</p></div>
+
+<h2>요약</h2>
+<div class="card">
+  <div class="donut-main"><div class="dw"><svg width="148" height="148" viewBox="0 0 148 148" role="img"><circle cx="74.0" cy="74.0" r="64.00" fill="none" stroke="var(--blue)" stroke-width="20" stroke-linecap="butt" stroke-dasharray="217.11 185.02" stroke-dashoffset="-0.00" transform="rotate(-90 74.0 74.0)"/><circle cx="74.0" cy="74.0" r="64.00" fill="none" stroke="var(--green)" stroke-width="20" stroke-linecap="butt" stroke-dasharray="70.88 331.24" stroke-dashoffset="-219.34" transform="rotate(-90 74.0 74.0)"/><circle cx="74.0" cy="74.0" r="64.00" fill="none" stroke="var(--red)" stroke-width="20" stroke-linecap="butt" stroke-dasharray="107.44 294.69" stroke-dashoffset="-292.45" transform="rotate(-90 74.0 74.0)"/></svg><div class="mid"><b>55%</b><span>Amplify</span><span class="den">/ 11건</span></div></div><div class="legend"><div class="lg"><span class="dot" style="background:var(--blue)"></span><span class="nm">Amplify</span><span class="vl">6</span></div><div class="lg"><span class="dot" style="background:var(--green)"></span><span class="nm">Offload</span><span class="vl">2</span></div><div class="lg"><span class="dot" style="background:var(--red)"></span><span class="nm">Bypass</span><span class="vl">3</span></div><div class="lg off"><span class="dot hollow"></span><span class="nm">Neutral<em>판단했고 의미 없음</em></span><span class="vl">1</span></div></div></div>
+  <div class="pair">
+    <div><h4><i style="background:var(--blue)"></i>Amplify 분류</h4><div class="mini"><div class="dw"><svg width="84" height="84" viewBox="0 0 84 84" role="img"><circle cx="42.0" cy="42.0" r="35.50" fill="none" stroke="var(--blue)" stroke-width="13" stroke-linecap="butt" stroke-dasharray="35.94 187.12" stroke-dashoffset="-0.00" transform="rotate(-90 42.0 42.0)"/><circle cx="42.0" cy="42.0" r="35.50" fill="none" stroke="var(--teal)" stroke-width="13" stroke-linecap="butt" stroke-dasharray="73.11 149.94" stroke-dashoffset="-37.18" transform="rotate(-90 42.0 42.0)"/><circle cx="42.0" cy="42.0" r="35.50" fill="none" stroke="var(--indigo)" stroke-width="13" stroke-linecap="butt" stroke-dasharray="73.11 149.94" stroke-dashoffset="-111.53" transform="rotate(-90 42.0 42.0)"/><circle cx="42.0" cy="42.0" r="35.50" fill="none" stroke="var(--cyan)" stroke-width="13" stroke-linecap="butt" stroke-dasharray="35.94 187.12" stroke-dashoffset="-185.88" transform="rotate(-90 42.0 42.0)"/></svg></div><div class="keys"><div class="k"><i style="background:var(--blue);"></i>Steer<b>1</b></div><div class="k"><i style="background:var(--teal);"></i>Ground<b>2</b></div><div class="k"><i style="background:var(--indigo);"></i>Deepen<b>2</b></div><div class="k"><i style="background:var(--cyan);"></i>Expand<b>1</b></div></div></div></div>
+    <div><h4><i style="background:var(--red)"></i>Bypass 분류</h4><div class="mini"><div class="dw"><svg width="84" height="84" viewBox="0 0 84 84" role="img"><circle cx="42.0" cy="42.0" r="35.50" fill="none" stroke="var(--orange)" stroke-width="13" stroke-linecap="butt" stroke-dasharray="73.11 149.94" stroke-dashoffset="-0.00" transform="rotate(-90 42.0 42.0)"/><circle cx="42.0" cy="42.0" r="35.50" fill="none" stroke="var(--red)" stroke-width="13" stroke-linecap="butt" stroke-dasharray="73.11 149.94" stroke-dashoffset="-74.35" transform="rotate(-90 42.0 42.0)"/><circle cx="42.0" cy="42.0" r="35.50" fill="none" stroke="var(--purple)" stroke-width="13" stroke-linecap="butt" stroke-dasharray="73.11 149.94" stroke-dashoffset="-148.70" transform="rotate(-90 42.0 42.0)"/></svg></div><div class="keys"><div class="k"><i style="background:var(--orange);"></i>Ceded Decisions<b>1</b></div><div class="k"><i style="background:var(--red);"></i>Skipped Verification<b>1</b></div><div class="k"><i style="background:var(--pink);opacity:.35"></i>Illusion of Competence<b>0</b></div><div class="k"><i style="background:var(--purple);"></i>Capability Not Formed<b>1</b></div></div></div></div>
+  </div>
+</div>
+
+<h2>하루의 흐름</h2>
+<div class="card strip"><div class="bars"><button data-id="p001" style="height:56px;background:var(--teal)" title="09:12 · Ground · 이 함수에서 early return 쓸 때 예외 처리 흐름이 어떻게 바뀌는지 설명해줘. 내 가설은 final"></button><button data-id="p002" style="height:35px;background:var(--teal)" title="09:28 · Ground · install.sh에서 trap 쓸 때 EXIT vs ERR 차이 정리해줘"></button><button data-id="p003" style="height:48px;background:var(--green)" title="09:45 · Offload · CI yaml 파일에서 cache key를 hashFiles 로 바꿔줘. 현재 package-lock.jso"></button><button data-id="p004" style="height:25px;background:var(--orange)" title="10:02 · Ceded Decisions · 알아서 제일 좋은 구조로 리팩토링 해줘"></button><button data-id="p005" style="height:48px;background:var(--blue)" title="10:30 · Steer · 이 컴포넌트 성능 문제 있을 수 있을까? useMemo 걸어야 하는 부분 찾아줘. 렌더링 50ms 넘으면 문"></button><button data-id="p006" style="height:19px;background:var(--red)" title="11:15 · Skipped Verification · 좋아 그대로 적용해"></button><button data-id="p007" style="height:90px;background:var(--indigo)" title="11:40 · Deepen · 내가 작성한 이 분류 로직 리뷰해줘. 특히 gate 판정 순서가 의미적으로 맞는지 확인하고 싶어.
+
+```
+"></button><button data-id="p008" style="height:86px;background:var(--indigo)" title="13:00 · Deepen · TypeScript에서 discriminated union 패턴 연습하고 싶어. 내가 먼저 써볼게:
+
+typ"></button><button data-id="p009" style="height:21px;background:var(--purple)" title="13:30 · Capability Not Formed · README.md 만들어줘"></button><button data-id="p010" style="height:68px;background:var(--cyan)" title="14:00 · Expand · 지금 실력으로 될지 모르겠는데, WebSocket으로 실시간 협업 에디터 만들어보고 싶어. CRDT 기본 개"></button><button data-id="p011" style="height:32px;background:var(--green)" title="14:30 · Offload · 회의록 정리해줘. 오늘 데일리 스탠드업 내용인데 3줄 요약으로."></button><button data-id="p012" style="height:15px;background:var(--gray)" title="15:00 · Neutral · ㄱ"></button></div>
+<div class="axis"><span>09:12</span><span>막대 높이 = 프롬프트 길이 · 탭하면 이동</span><span>15:00</span></div></div>
+
+<h2>전체 프롬프트 · 12</h2>
+<div class="seg"><button data-f="all" aria-pressed="true">전체</button><button data-f="amplify" aria-pressed="false">Amplify</button><button data-f="offload" aria-pressed="false">Offload</button><button data-f="bypass" aria-pressed="false">Bypass</button><button data-f="neutral" aria-pressed="false">Neutral</button><button data-f="ambiguous" aria-pressed="false">Ambiguous</button></div>
+<div class="card"><div class="p amplify" id="p001" data-v="amplify"><div class="top"><span>09:12</span><span>amplify-audit</span><span class="tag" style="color:var(--teal)">Ground</span></div><div class="text">이 함수에서 early return 쓸 때 예외 처리 흐름이 어떻게 바뀌는지 설명해줘. 내 가설은 finally 블록이 여전히 실행된다는 건데 맞아?</div><div class="reason">본인의 가설(&#x27;finally 블록 여전히 실행&#x27;)을 먼저 세우고 확인을 요청. 이해가 목적.</div></div><div class="p amplify" id="p002" data-v="amplify"><div class="top"><span>09:28</span><span>amplify-audit</span><span class="tag" style="color:var(--teal)">Ground</span></div><div class="text">install.sh에서 trap 쓸 때 EXIT vs ERR 차이 정리해줘</div><div class="reason">EXIT vs ERR 차이를 파악하기 위한 정리 요청. 이해 목적의 질문.</div></div><div class="p offload" id="p003" data-v="offload"><div class="top"><span>09:45</span><span>amplify-audit</span><span class="tag" style="color:var(--green)">Offload</span><span class="gate ok">✓ 상황 이해</span><span class="gate ok">✓ 여력 확보</span><span class="gate ok">✓ 위임 적격</span></div><div class="text">CI yaml 파일에서 cache key를 hashFiles 로 바꿔줘. 현재 package-lock.json 기준으로.</div><div class="reason">cache key 변경은 반복성 작업. 본인이 원리를 알고 있고 결과를 검증할 수 있음.</div></div><div class="p bypass" id="p004" data-v="bypass"><div class="top"><span>10:02</span><span>Heatmap</span><span class="tag" style="color:var(--orange)">Ceded Decisions</span></div><div class="text">알아서 제일 좋은 구조로 리팩토링 해줘</div><div class="reason">&#x27;알아서 제일 좋은&#x27;만 있고 제약 조건이 하나도 없음. 판단 기준 없이 위임.</div></div><div class="p amplify" id="p005" data-v="amplify"><div class="top"><span>10:30</span><span>Heatmap</span><span class="tag" style="color:var(--blue)">Steer</span></div><div class="text">이 컴포넌트 성능 문제 있을 수 있을까? useMemo 걸어야 하는 부분 찾아줘. 렌더링 50ms 넘으면 문제라고 봄.</div><div class="reason">&#x27;렌더링 50ms 넘으면 문제&#x27;라는 제약 조건을 명시. 본인이 기준을 설정하고 AI가 탐색.</div></div><div class="p bypass" id="p006" data-v="bypass"><div class="top"><span>11:15</span><span>Heatmap</span><span class="tag" style="color:var(--red)">Skipped Verification</span></div><div class="text">좋아 그대로 적용해</div><div class="reason">이전 출력을 검증 없이 바로 적용 지시. 수용과 다음 행동 사이에 간격 없음.</div></div><div class="p amplify" id="p007" data-v="amplify"><div class="top"><span>11:40</span><span>amplify-audit</span><span class="tag" style="color:var(--indigo)">Deepen</span></div><div class="text">내가 작성한 이 분류 로직 리뷰해줘. 특히 gate 판정 순서가 의미적으로 맞는지 확인하고 싶어.
+
+```
+if understood and relieved and eligible: offload
+elif not understood: bypass/illusion
+```</div><div class="reason">본인이 먼저 분류 로직을 작성하고 AI에게 리뷰를 요청. 산출 → 반응 구조.</div></div><div class="p amplify" id="p008" data-v="amplify"><div class="top"><span>13:00</span><span>amplify-audit</span><span class="tag" style="color:var(--indigo)">Deepen</span></div><div class="text">TypeScript에서 discriminated union 패턴 연습하고 싶어. 내가 먼저 써볼게:
+
+type Result = { ok: true; data: T } | { ok: false; error: Error }
+
+이거 맞아? 부족한 점 짚어줘.</div><div class="reason">본인이 먼저 타입을 작성하고 &#x27;부족한 점 짚어줘&#x27; 요청. 산출 → 피드백 구조.</div></div><div class="p bypass" id="p009" data-v="bypass"><div class="top"><span>13:30</span><span>amplify-audit</span><span class="tag" style="color:var(--purple)">Capability Not Formed</span></div><div class="text">README.md 만들어줘</div><div class="reason">README 작성을 통째로 위임. 프로젝트 문서화 역량이 형성되지 않음.</div></div><div class="p amplify" id="p010" data-v="amplify"><div class="top"><span>14:00</span><span>side-project</span><span class="tag" style="color:var(--cyan)">Expand</span></div><div class="text">지금 실력으로 될지 모르겠는데, WebSocket으로 실시간 협업 에디터 만들어보고 싶어. CRDT 기본 개념부터 잡아줘. 내가 이해한 건 &#x27;마지막 쓴 사람이 이기는&#x27; 정도인데 그게 맞아?</div><div class="reason">&#x27;지금 실력으로 될지 모르겠는데&#x27;로 자각하며 영역 확장. 본인의 이해 수준도 밝힘.</div></div><div class="p offload" id="p011" data-v="offload"><div class="top"><span>14:30</span><span>side-project</span><span class="tag" style="color:var(--green)">Offload</span><span class="gate ok">✓ 상황 이해</span><span class="gate ok">✓ 여력 확보</span><span class="gate ok">✓ 위임 적격</span></div><div class="text">회의록 정리해줘. 오늘 데일리 스탠드업 내용인데 3줄 요약으로.</div><div class="reason">회의록 3줄 요약은 정리 위임. 내용을 이미 알고 있고, 결과를 확인 가능.</div></div><div class="p neutral" id="p012" data-v="neutral"><div class="top"><span>15:00</span><span>amplify-audit</span><span class="tag" style="color:var(--gray)">Neutral</span></div><div class="text">ㄱ</div><div class="reason">단순 continuation. 의미 없는 기계적 입력.</div></div><div class="empty" id="empty" hidden>해당하는 프롬프트가 없습니다.</div></div>
+
+<footer>2026-08-15 16:22 · amplify-audit · 각 항목의 판단 근거는 함께 적혀 있습니다. 동의하지 않는 태그는 반박 대상입니다.</footer>
+</div><script>
+const btns=[...document.querySelectorAll('.seg button')],rows=[...document.querySelectorAll('.p')];
+btns.forEach(b=>b.onclick=()=>{btns.forEach(x=>x.setAttribute('aria-pressed',x===b));
+const f=b.dataset.f;let n=0;rows.forEach(r=>{const on=f==='all'||r.dataset.v===f;
+r.hidden=!on;if(on)n++});document.getElementById('empty').hidden=n>0});
+document.querySelectorAll('.bars button').forEach(t=>t.onclick=()=>{btns[0].click();
+const e=document.getElementById(t.dataset.id);e.scrollIntoView({behavior:'smooth',block:'center'});
+location.hash=t.dataset.id});
+</script></body></html>

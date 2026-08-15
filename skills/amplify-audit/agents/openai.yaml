@@ -1,0 +1,6 @@
+interface:
+  display_name: "Amplify Audit"
+  short_description: "Audit your prompts — classify each as Amplify, Cognitive Offload, or Bypass — and generate an HTML report with ratios and timeline."
+  default_prompt: "오늘 프롬프트 분석해줘"
+
+allow_implicit_invocation: true

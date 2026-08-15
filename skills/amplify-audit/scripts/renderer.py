@@ -81,7 +81,7 @@ h3{font-size:17px;font-weight:600;margin:0;letter-spacing:-.4px}
  margin-left:auto;padding-left:8px}
 .strip{padding:18px 16px 12px}
 .bars{display:flex;align-items:flex-end;gap:2px;height:92px}
-.bars button{flex:1 1 4px;min-width:3px;border:0;padding:0;border-radius:2.5px;
+.bars button{flex:1 1 6px;min-width:6px;max-width:20px;border:0;padding:0;border-radius:2.5px;
  cursor:pointer;opacity:.92;transition:opacity .15s,transform .15s;transform-origin:bottom}
 .bars button:hover,.bars button:focus-visible{opacity:1;transform:scaleX(1.6)}
 .axis{display:flex;justify-content:space-between;font-size:11px;color:var(--label3);

@@ -16,147 +16,14 @@ from constants import (
     LABELS, TAG_VAR, VERDICT_VAR,
 )
 
-# ---------------------------------------------------------------- CSS / JS / template
+# ---------------------------------------------------------------- template
 
-CSS = """\
-*,*::before,*::after{box-sizing:border-box}
-:root{
- --blue:#007AFF;--green:#34C759;--indigo:#5856D6;--orange:#FF9500;--pink:#FF2D55;
- --purple:#AF52DE;--red:#FF3B30;--teal:#30B0C7;--cyan:#32ADE6;
- --ok-bg:rgba(52,199,89,.15);--no-bg:rgba(255,59,48,.15);
- --gray:#8E8E93;--gray3:#C7C7CC;--gray5:#E5E5EA;
- --bg:#F2F2F7;--card:#FFFFFF;--label:#000000;--label2:rgba(60,60,67,.6);
- --label3:rgba(60,60,67,.3);--sep:rgba(60,60,67,.29);--fill:rgba(120,120,128,.12);
- --radius:12px;
- --sf:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",
-   "Apple SD Gothic Neo","Pretendard Variable",Pretendard,sans-serif}
-@media (prefers-color-scheme:dark){:root{
- --blue:#0A84FF;--green:#30D158;--indigo:#5E5CE6;--orange:#FF9F0A;--pink:#FF375F;
- --purple:#BF5AF2;--red:#FF453A;--teal:#40C8E0;--cyan:#64D2FF;
- --ok-bg:rgba(48,209,88,.22);--no-bg:rgba(255,69,58,.22);
- --gray:#8E8E93;--gray3:#48484A;--gray5:#2C2C2E;
- --bg:#000000;--card:#1C1C1E;--label:#FFFFFF;--label2:rgba(235,235,245,.6);
- --label3:rgba(235,235,245,.3);--sep:rgba(84,84,88,.65);--fill:rgba(120,120,128,.24)}}
-body{margin:0;background:var(--bg);color:var(--label);font-family:var(--sf);
- font-size:17px;line-height:1.47;-webkit-font-smoothing:antialiased}
-.wrap{max-width:760px;margin:0 auto;padding:44px 20px 80px}
-h1{font-size:34px;font-weight:700;letter-spacing:.37px;margin:0}
-h2{font-size:13px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;
- color:var(--label2);margin:34px 0 8px;padding:0 16px}
-h3{font-size:17px;font-weight:600;margin:0;letter-spacing:-.4px}
-.sub{color:var(--label2);font-size:15px;margin:4px 0 0}
-.head{padding:0 4px 6px}
-.card{background:var(--card);border-radius:var(--radius);overflow:hidden}
-.row{padding:12px 16px;border-top:.5px solid var(--sep)}
-.row:first-child{border-top:0}
-.donut-main{display:flex;align-items:center;gap:24px;padding:20px 16px;flex-wrap:wrap}
-.dw{position:relative;flex:0 0 auto;line-height:0}
-.dw .mid{position:absolute;inset:0;display:flex;flex-direction:column;
- align-items:center;justify-content:center;text-align:center;line-height:1.2}
-.dw .mid b{font-size:30px;font-weight:700;letter-spacing:-.5px;line-height:1}
-.dw .mid span{font-size:11px;color:var(--label2);margin-top:2px}
-.dw .mid .den{font-size:10px;color:var(--label3);margin-top:1px;font-variant-numeric:tabular-nums}
-.legend{flex:1 1 200px;min-width:190px}
-.lg{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:15px}
-.lg .dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
-.lg .nm{flex:1}
-.lg .vl{font-variant-numeric:tabular-nums;color:var(--label2)}
-.lg.sep{border-top:.5px solid var(--sep);margin-top:6px}
-.lg.off{color:var(--label3)}
-.lg .dot.hollow{border:1.5px dashed var(--gray3);background:none}
-.lg.off .vl{color:var(--label3);font-size:13px}
-.lg.off .nm em{display:block;font-style:normal;font-size:11px;color:var(--label3);margin-top:-1px}
-.lg.off:first-of-type{margin-top:6px;border-top:.5px solid var(--sep);padding-top:9px}
-.pair{display:grid;grid-template-columns:1fr 1fr;border-top:.5px solid var(--sep)}
-.pair>div{padding:18px 16px}
-.pair>div+div{border-left:.5px solid var(--sep)}
-.pair h4{margin:0 0 12px;font-size:13px;font-weight:600;color:var(--label2)}
-.pair h4 i{width:8px;height:8px;border-radius:50%;display:inline-block}
-.mini{display:flex;align-items:center;gap:14px}
-.mini .keys{flex:1;min-width:0}
-.mini .k{display:flex;align-items:center;gap:7px;font-size:12.5px;padding:2.5px 0;
- color:var(--label2)}
-.mini .k i{width:8px;height:8px;border-radius:2px;flex:0 0 auto}
-.mini .k b{color:var(--label);font-weight:600;font-variant-numeric:tabular-nums;
- margin-left:auto;padding-left:8px}
-.strip{padding:18px 16px 12px}
-.bars{display:flex;align-items:flex-end;gap:2px;height:92px}
-.bars button{flex:1 1 6px;min-width:6px;max-width:20px;border:0;padding:0;border-radius:2.5px;
- cursor:pointer;opacity:.92;transition:opacity .15s,transform .15s;transform-origin:bottom}
-.bars button:hover,.bars button:focus-visible{opacity:1;transform:scaleX(1.6)}
-.axis{display:flex;justify-content:space-between;font-size:11px;color:var(--label3);
- margin-top:8px;border-top:.5px solid var(--sep);padding-top:7px}
-.seg{display:flex;background:var(--fill);border-radius:9px;padding:2px;margin:0 0 10px;overflow-x:auto;scrollbar-width:none}
-.seg::-webkit-scrollbar{display:none}
-.seg button{flex:1;font:inherit;font-size:13px;font-weight:500;border:0;background:none;
- color:var(--label);padding:6px 4px;border-radius:7px;cursor:pointer;white-space:nowrap}
-.seg button[aria-pressed="true"]{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.p{padding:13px 16px;border-top:.5px solid var(--sep);border-left:3px solid transparent}
-.p:first-child{border-top:0}
-.p.amplify{border-left-color:var(--blue)}
-.p.offload{border-left-color:var(--green)}
-.p.bypass{border-left-color:var(--red)}
-.p.ambiguous{border-left-color:var(--gray3);border-left-style:dashed}
-.p .top{display:flex;flex-wrap:wrap;gap:4px 9px;align-items:center;font-size:12px;
- color:var(--label3)}
-.p .tag{font-weight:600}
-.p .pill{background:var(--fill);color:var(--label2);border-radius:999px;padding:1px 8px;
- font-size:11px}
-.p .gate{border-radius:999px;padding:1px 8px;font-size:11px;font-weight:600}
-.p .gate.ok{background:var(--ok-bg);color:var(--green)}
-.p .gate.no{background:var(--no-bg);color:var(--red)}
-.p .text{margin:6px 0 0;font-size:16px;white-space:pre-wrap;word-break:break-word}
-.p .reason{margin:7px 0 0;font-size:13.5px;color:var(--label2);line-height:1.45}
-.p:target{background:var(--fill)}
-.p.ambiguous .text{color:var(--label2)}
-.p.ambiguous .tag{opacity:.45}
-.empty{padding:20px 16px;color:var(--label3);font-size:15px}
-footer{margin-top:34px;padding:0 16px;font-size:12px;color:var(--label3)}
-@media (max-width:520px){.wrap{padding:28px 12px 60px}h1{font-size:28px}
- .pair{grid-template-columns:1fr}
- .pair>div+div{border-left:0;border-top:.5px solid var(--sep)}
- .donut-main{gap:16px}}
-@media print{body{background:#fff}.seg{display:none}.p{break-inside:avoid}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-"""
+TEMPLATE_PATH = Path(__file__).parent / "template.html"
 
-JS = """\
-const btns=[...document.querySelectorAll('.seg button')],rows=[...document.querySelectorAll('.p')];
-btns.forEach(b=>b.onclick=()=>{btns.forEach(x=>x.setAttribute('aria-pressed',x===b));
-const f=b.dataset.f;let n=0;rows.forEach(r=>{const on=f==='all'||r.dataset.v===f;
-r.hidden=!on;if(on)n++});document.getElementById('empty').hidden=n>0});
-document.querySelectorAll('.bars button').forEach(t=>t.onclick=()=>{btns[0].click();
-const e=document.getElementById(t.dataset.id);e.scrollIntoView({behavior:'smooth',block:'center'});
-location.hash=t.dataset.id});
-"""
 
-PAGE = Template("""\
-<!doctype html><html lang="ko"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="light dark">
-<title>프롬프트 리포트 — $label</title><style>$css</style></head><body><div class="wrap">
+def _load_template() -> Template:
+    return Template(TEMPLATE_PATH.read_text(encoding="utf-8"))
 
-<div class="head"><h1>프롬프트 리포트</h1><p class="sub">$label</p></div>
-
-<h2>요약</h2>
-<div class="card">
-  <div class="donut-main">$main_donut<div class="legend">$legend</div></div>
-  <div class="pair">
-    <div><h4><i style="background:var(--blue)"></i>Amplify 분류</h4>$amp_mini</div>
-    <div><h4><i style="background:var(--red)"></i>Bypass 분류</h4>$byp_mini</div>
-  </div>
-</div>
-
-<h2>하루의 흐름</h2>
-<div class="card strip"><div class="bars">$bars</div>
-<div class="axis"><span>$first</span><span>막대 높이 = 프롬프트 길이 · 탭하면 이동</span><span>$last</span></div></div>
-
-<h2>전체 프롬프트 · $count</h2>
-<div class="seg">$filters</div>
-<div class="card">$rows<div class="empty" id="empty" hidden>해당하는 프롬프트가 없습니다.</div></div>
-
-<footer>$generated · amplify-audit · 각 항목의 판단 근거는 함께 적혀 있습니다. 동의하지 않는 태그는 반박 대상입니다.</footer>
-</div><script>$js</script></body></html>""")
 
 # ---------------------------------------------------------------- helpers
 
@@ -338,8 +205,8 @@ def render(args) -> None:
         + (f'<div class="reason">{esc(p.get("reason"))}</div>' if p.get("reason") else "")
         + '</div>' for p in prompts)
 
-    page = PAGE.substitute(
-        css=CSS, js=JS, label=esc(meta.get("label", "")),
+    page = _load_template().substitute(
+        label=esc(meta.get("label", "")),
         main_donut=main, legend=legend,
         amp_mini=mini(AMP), byp_mini=mini(BYP),
         bars=bars or '<span class="empty">기록 없음</span>',

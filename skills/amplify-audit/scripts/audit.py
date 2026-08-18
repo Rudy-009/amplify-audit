@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
-"""amplify-audit — entry point.
+"""amplify-audit — two subcommands.
 
-  collect : read Claude Code / Codex transcripts, print user prompts as JSON
-  render  : read classifications on stdin, join with prompts, write HTML report
+  collect : read Claude Code / Codex transcripts, print the user's prompts as JSON
+            and save them to --out (default ~/amplify-audit/prompts.json)
+  render  : read the saved prompts from --prompts and the classifications
+            from stdin, join them by id, write the HTML report
 
 Stdlib only.
 """
-
-from __future__ import annotations
 
 import argparse
 import os
 import sys
 
-# Allow running as `python3 audit.py` (not just `python3 -m amplify_audit`)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from collector import collect  # noqa: E402
-from renderer import render    # noqa: E402
+from collector import collect
+from renderer import render
 
 
 def main() -> None:
@@ -27,9 +26,9 @@ def main() -> None:
 
     c = sub.add_parser("collect", help="print the user's prompts as JSON")
     c.add_argument("--root", default="~/.claude/projects",
-                   help="Claude Code transcripts root")
+                   help="Claude Code transcripts root (default: ~/.claude/projects)")
     c.add_argument("--codex-root", default="~/.codex/sessions",
-                   help="Codex CLI transcripts root")
+                   help="Codex CLI transcripts root (default: ~/.codex/sessions)")
     c.add_argument("--date", help="YYYY-MM-DD")
     c.add_argument("--since", help="7d, 12h")
     c.add_argument("--session", help="session id or 'current'")

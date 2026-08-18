@@ -1,1 +1,0 @@
-"""amplify-audit skill package."""
